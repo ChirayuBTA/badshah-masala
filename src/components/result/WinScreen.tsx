@@ -10,10 +10,12 @@ interface Props {
   name: string;
 }
 
+const EASE = [0.23, 1, 0.32, 1] as [number, number, number, number];
+
 export default function WinScreen({ name }: Props) {
   const { phone } = useOtpStore();
   const shouldReduce = useReducedMotion();
-  const maskedPhone = `+91 ****${phone.slice(-4)}`;
+  const maskedPhone = phone ? `+91 ****${phone.slice(-4)}` : '+91 ****XXXX';
 
   const shareText = encodeURIComponent(
     `I just won a ${PRIZE_NAME} from Badshah Masala! 🎉 Take the survey and enter the draw: [link]`
@@ -22,15 +24,15 @@ export default function WinScreen({ name }: Props) {
   return (
     <div
       className="flex flex-col items-center px-5 py-10 gap-6 text-center min-h-screen justify-center"
-      style={{ background: '#120500' }}
+      style={{ background: '#FAFAFA' }}
     >
       {!shouldReduce && <Confetti active />}
 
       {/* Crown */}
       <motion.div
-        initial={shouldReduce ? false : { scale: 0.5, opacity: 0 }}
+        initial={shouldReduce ? false : { scale: 0.6, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ type: 'spring', bounce: 0.3, delay: 0.1 }}
+        transition={{ type: 'spring', bounce: 0.28, delay: 0.1 }}
         className="text-5xl select-none"
         aria-hidden
       >
@@ -41,42 +43,46 @@ export default function WinScreen({ name }: Props) {
       <motion.div
         initial={shouldReduce ? false : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.28, delay: 0.22, ease: [0.23, 1, 0.32, 1] }}
+        transition={{ duration: 0.26, delay: 0.22, ease: EASE }}
         className="flex flex-col gap-1"
       >
-        <p className="font-body text-sm font-semibold tracking-widest uppercase" style={{ color: '#F5A623' }}>
+        <p className="font-body text-xs font-semibold tracking-widest uppercase text-saffron">
           Congratulations
         </p>
         <h1
-          className="font-display font-bold text-white"
-          style={{ fontSize: 'clamp(2rem, 7vw, 2.8rem)', letterSpacing: '-0.02em', textWrap: 'balance' }}
+          className="font-display font-bold text-ink"
+          style={{
+            fontSize: 'clamp(2rem, 7vw, 2.8rem)',
+            letterSpacing: '-0.02em',
+            textWrap: 'balance',
+          }}
         >
-          You&apos;re a Winner,<br />
-          <span style={{ color: '#F5A623' }}>{name}!</span>
+          You&apos;re a Winner,{' '}
+          <span className="text-crimson">{name}!</span>
         </h1>
       </motion.div>
 
       {/* Prize card */}
       <motion.div
-        initial={shouldReduce ? false : { y: 48, opacity: 0 }}
+        initial={shouldReduce ? false : { y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ type: 'spring', bounce: 0.15, delay: 0.38 }}
+        transition={{ type: 'spring', bounce: 0.15, delay: 0.35 }}
         className="w-full max-w-xs rounded-2xl p-5 flex flex-col gap-3"
         style={{
-          background: 'rgba(255,255,255,0.06)',
-          border: '1px solid rgba(245,166,35,0.3)',
-          boxShadow: '0 0 40px rgba(245,166,35,0.08)',
+          background: '#FFFFFF',
+          border: '2px solid #F5A623',
+          boxShadow: '0 4px 24px rgba(245,166,35,0.15)',
         }}
       >
         <div className="text-3xl" aria-hidden>🎁</div>
-        <p className="font-body text-xs font-semibold tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.4)' }}>
+        <p className="font-body text-[10px] font-semibold tracking-widest uppercase text-ink/40">
           You&apos;ve won
         </p>
-        <p className="font-display text-lg font-bold text-white leading-snug">{PRIZE_NAME}</p>
-        <div className="w-full h-px" style={{ background: 'rgba(255,255,255,0.08)' }} />
-        <p className="font-body text-xs leading-relaxed" style={{ color: 'rgba(255,255,255,0.45)' }}>
+        <p className="font-display text-lg font-bold text-ink leading-snug">{PRIZE_NAME}</p>
+        <div className="w-full h-px bg-border" />
+        <p className="font-body text-xs leading-relaxed text-ink/50">
           Our team will contact you on{' '}
-          <span className="font-semibold" style={{ color: 'rgba(255,255,255,0.7)' }}>{maskedPhone}</span>{' '}
+          <span className="font-semibold text-ink/70">{maskedPhone}</span>{' '}
           within 3 working days.
         </p>
       </motion.div>
@@ -85,7 +91,7 @@ export default function WinScreen({ name }: Props) {
       <motion.div
         initial={shouldReduce ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.26, delay: 0.55, ease: [0.23, 1, 0.32, 1] }}
+        transition={{ duration: 0.24, delay: 0.52, ease: EASE }}
         className="w-full max-w-xs flex flex-col gap-3"
       >
         <Button
@@ -104,10 +110,9 @@ export default function WinScreen({ name }: Props) {
       <motion.a
         initial={shouldReduce ? false : { opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.22, delay: 0.7 }}
+        transition={{ duration: 0.2, delay: 0.65 }}
         href="/"
-        className="font-body text-sm transition-colors duration-150"
-        style={{ color: 'rgba(255,255,255,0.3)' }}
+        className="font-body text-sm text-ink/35 transition-colors duration-150 hover:text-ink/60"
       >
         Back to home
       </motion.a>

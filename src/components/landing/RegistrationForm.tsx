@@ -24,8 +24,12 @@ export default function RegistrationForm() {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 10 }}
       transition={{ duration: 0.32, ease: [0.23, 1, 0.32, 1] }}
-      className="mx-4 mb-6 rounded-2xl bg-milk flex flex-col gap-5 p-5"
-      style={{ boxShadow: '0 -2px 0 0 rgba(190,30,45,0.4), 0 8px 32px rgba(0,0,0,0.45)' }}
+      className="mx-4 mb-6 rounded-2xl flex flex-col gap-5 p-5"
+      style={{
+        background: '#FFFFFF',
+        border: '1px solid #E2D9D4',
+        boxShadow: '0 2px 12px rgba(0,0,0,0.06)',
+      }}
     >
       {/* Card header */}
       <div className="flex flex-col gap-1">

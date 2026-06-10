@@ -17,7 +17,7 @@ export default function HomePage() {
   }, [step, router]);
 
   return (
-    <div className="flex flex-col min-h-screen max-w-lg mx-auto w-full" style={{ background: '#120500' }}>
+    <div className="flex flex-col min-h-screen max-w-lg mx-auto w-full" style={{ background: '#FAFAFA' }}>
       <HeroSection />
 
       <AnimatePresence mode="wait">
