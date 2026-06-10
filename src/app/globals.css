@@ -1,59 +1,80 @@
 @import "tailwindcss";
 
 @theme {
-  --color-crimson: #BE1E2D;
-  --color-crimson-dark: #961825;
-  --color-saffron: #F5A623;
-  --color-spice: #E8621A;
-  --color-cardamom: #1E5631;
-  --color-espresso: #1A0800;
-  --color-parchment: #FFF6EE;
-  --color-parchment-dark: #F5E8D8;
+  /* Brand palette */
+  --color-crimson:       #BE1E2D;
+  --color-crimson-dark:  #8F1521;
+  --color-saffron:       #F5A623;
+  --color-spice:         #E8621A;
+  --color-cardamom:      #1E5631;
 
-  --font-display: var(--font-playfair), Georgia, serif;
-  --font-body: var(--font-jakarta), system-ui, sans-serif;
+  /* Neutrals */
+  --color-espresso:      #120500;   /* deep warm near-black — body bg on dark surfaces */
+  --color-espresso-mid:  #2D1008;   /* mid warm dark — elevated surface on espresso */
+  --color-espresso-rim:  #3E1A0A;   /* border on dark surfaces */
+  --color-ink:           #1A0800;   /* near-black for body text on light */
+  --color-milk:          #FAFAFA;   /* near-neutral white — light surface bg */
+  --color-muted:         #F0EBE6;   /* very slight warm tint — chip/input backgrounds */
+  --color-border:        #E2D9D4;   /* light border */
+
+  /* Typography */
+  --font-display: var(--font-eczar), Georgia, serif;
+  --font-body:    var(--font-nunito), system-ui, sans-serif;
 }
 
-:root {
-  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-}
+/* ── Base reset ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
 
-* {
-  box-sizing: border-box;
-}
-
-html, body {
-  height: 100%;
-}
+html, body { height: 100%; }
 
 body {
-  background: #FFF6EE;
+  background: #FAFAFA;
   color: #1A0800;
-  font-family: var(--font-jakarta), system-ui, sans-serif;
+  font-family: var(--font-nunito), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* ── Custom easing properties ────────────────────────────────────── */
+:root {
+  --ease-out-strong:    cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+/* ── Keyframes ──────────────────────────────────────────────────── */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes pulse-gentle {
   0%, 100% { opacity: 1; }
-  50%       { opacity: 0.65; }
+  50%       { opacity: 0.6; }
 }
 
-@keyframes confetti-fall {
-  to { transform: translateY(100vh) rotate(720deg); opacity: 0; }
-}
-
+/* ── Utility classes ─────────────────────────────────────────────── */
 .animate-fade-up {
-  animation: fadeUp 0.35s var(--ease-out-strong) both;
+  animation: fadeUp 0.28s var(--ease-out-strong) both;
 }
 
 .animate-pulse-gentle {
   animation: pulse-gentle 2s ease-in-out infinite;
 }
+
+/* ── Reduced motion ──────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-up {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .animate-pulse-gentle {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* ── Hover guard ─────────────────────────────────────────────────── */
+/* All hover-intent styles are gated in component JSX using this pattern:
+   only applied via Tailwind `hover:` which fires on touch too.
+   Use `@media (hover: hover)` for motion-heavy hover effects in plain CSS. */

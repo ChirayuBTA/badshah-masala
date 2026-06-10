@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 interface Props {
   children: React.ReactNode;
@@ -9,11 +9,13 @@ interface Props {
 }
 
 export default function AnimatedReveal({ children, delay = 0, className }: Props) {
+  const shouldReduce = useReducedMotion();
+
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={shouldReduce ? false : { opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, delay, ease: [0.23, 1, 0.32, 1] }}
+      transition={{ duration: 0.26, delay: shouldReduce ? 0 : delay, ease: [0.23, 1, 0.32, 1] }}
       className={className}
     >
       {children}

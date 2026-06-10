@@ -53,8 +53,8 @@ export default function OtpDigitInput({ value, onChange, onComplete, error }: Pr
 
   return (
     <div className="flex flex-col items-center gap-3">
-      <div className="flex gap-3">
-        {[0, 1, 2, 3].map((i) => (
+      <div className="flex gap-3 justify-center">
+        {([0, 1, 2, 3] as const).map((i) => (
           <input
             key={i}
             ref={refs[i]}
@@ -66,18 +66,18 @@ export default function OtpDigitInput({ value, onChange, onComplete, error }: Pr
             onKeyDown={(e) => handleKey(i, e)}
             onPaste={handlePaste}
             aria-label={`OTP digit ${i + 1}`}
-            className={`w-14 h-14 text-center text-2xl font-display font-bold rounded-xl border-2 bg-white outline-none transition-colors duration-150 ${
-              error
-                ? 'border-spice text-spice'
-                : value[i]
-                ? 'border-crimson text-crimson'
-                : 'border-parchment-dark text-espresso focus:border-crimson'
-            }`}
+            className="w-14 h-14 text-center text-2xl font-display font-bold rounded-xl border-2 bg-muted outline-none transition-all duration-150"
+            style={{
+              background: '#F0EBE6',
+              borderColor: error ? '#E8621A' : value[i] ? '#BE1E2D' : '#E2D9D4',
+              color: error ? '#E8621A' : value[i] ? '#BE1E2D' : '#1A0800',
+              boxShadow: value[i] && !error ? '0 0 0 3px rgba(190,30,45,0.12)' : 'none',
+            }}
           />
         ))}
       </div>
       {error && (
-        <p className="text-spice text-sm font-body text-center">{error}</p>
+        <p className="font-body text-sm text-spice text-center">{error}</p>
       )}
     </div>
   );

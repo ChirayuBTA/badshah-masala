@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 import type { ConditionalQuestion } from '@/data/survey';
 import SingleSelect from './SingleSelect';
 
@@ -19,6 +19,7 @@ export default function ConditionalInput({
   onChange,
   onConditionalChange,
 }: Props) {
+  const shouldReduce = useReducedMotion();
   const showConditional = value === question.conditionalTriggerId;
 
   return (
@@ -32,11 +33,14 @@ export default function ConditionalInput({
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.28, ease: [0.23, 1, 0.32, 1] }}
+            transition={{
+              duration: shouldReduce ? 0 : 0.24,
+              ease: [0.23, 1, 0.32, 1],
+            }}
             className="overflow-hidden"
           >
-            <div className="pt-1">
-              <label className="font-body text-sm font-semibold text-espresso/70 mb-1.5 block">
+            <div className="pt-1 flex flex-col gap-1.5">
+              <label className="font-body text-[13px] font-semibold" style={{ color: 'rgba(26,8,0,0.55)' }}>
                 {question.conditionalLabel}
               </label>
               <input
@@ -45,7 +49,10 @@ export default function ConditionalInput({
                 onChange={(e) => onConditionalChange(e.target.value)}
                 placeholder={question.conditionalPlaceholder}
                 aria-label={question.conditionalLabel}
-                className="w-full rounded-xl border-2 border-parchment-dark bg-white px-4 py-3 text-base font-body text-espresso outline-none transition-colors duration-150 placeholder:text-espresso/30 focus:border-crimson"
+                className="w-full rounded-xl px-4 py-3 text-[15px] font-body text-ink outline-none transition-all duration-150"
+                style={{ background: '#F0EBE6', border: '1.5px solid transparent' }}
+                onFocus={(e) => { e.currentTarget.style.borderColor = '#BE1E2D'; }}
+                onBlur={(e) => { e.currentTarget.style.borderColor = 'transparent'; }}
               />
             </div>
           </motion.div>

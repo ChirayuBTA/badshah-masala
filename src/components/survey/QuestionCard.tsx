@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 import { useSurveyStore } from '@/store/surveyStore';
 import type { Question } from '@/data/survey';
 import SingleSelect from './answers/SingleSelect';
@@ -15,6 +15,7 @@ interface Props {
 
 export default function QuestionCard({ question, index }: Props) {
   const { answers, setAnswer } = useSurveyStore();
+  const shouldReduce = useReducedMotion();
 
   const renderInput = () => {
     if (question.type === 'single') {
@@ -26,7 +27,6 @@ export default function QuestionCard({ question, index }: Props) {
         />
       );
     }
-
     if (question.type === 'multi') {
       return (
         <MultiSelect
@@ -36,7 +36,6 @@ export default function QuestionCard({ question, index }: Props) {
         />
       );
     }
-
     if (question.type === 'text') {
       return (
         <TextAnswer
@@ -46,7 +45,6 @@ export default function QuestionCard({ question, index }: Props) {
         />
       );
     }
-
     if (question.type === 'conditional') {
       return (
         <ConditionalInput
@@ -58,13 +56,14 @@ export default function QuestionCard({ question, index }: Props) {
         />
       );
     }
-
     if (question.type === 'compound') {
       return (
         <div className="flex flex-col gap-4">
           {question.parts.map((part) => (
             <div key={part.id} className="flex flex-col gap-2">
-              <p className="font-body text-sm font-semibold text-espresso/70">{part.label}</p>
+              <p className="font-body text-[13px] font-semibold" style={{ color: 'rgba(26,8,0,0.55)' }}>
+                {part.label}
+              </p>
               {part.type === 'text' ? (
                 <TextAnswer
                   question={part}
@@ -83,21 +82,25 @@ export default function QuestionCard({ question, index }: Props) {
         </div>
       );
     }
-
     return null;
   };
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={shouldReduce ? false : { opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05, duration: 0.3, ease: [0.23, 1, 0.32, 1] }}
-      className="flex flex-col gap-3 bg-white rounded-2xl border border-parchment-dark p-5 shadow-sm"
+      transition={{ delay: index * 0.04, duration: 0.22, ease: [0.23, 1, 0.32, 1] }}
+      className="flex flex-col gap-3 rounded-2xl p-4"
+      style={{
+        background: '#FFFFFF',
+        border: '1px solid #E2D9D4',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.04)',
+      }}
     >
-      <p className="font-body text-base font-semibold text-espresso leading-snug">
-        {question.type !== 'compound' ? question.label : question.label}
+      <p className="font-body text-[15px] font-semibold text-ink leading-snug">
+        {question.label}
         {question.type !== 'compound' && question.required && (
-          <span className="text-crimson ml-0.5">*</span>
+          <span className="text-crimson ml-0.5" aria-hidden>*</span>
         )}
       </p>
       {renderInput()}

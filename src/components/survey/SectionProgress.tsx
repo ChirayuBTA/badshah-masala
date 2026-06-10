@@ -8,34 +8,34 @@ interface Props {
 
 export default function SectionProgress({ current, total, subtitle }: Props) {
   return (
-    <div className="flex flex-col gap-2 px-6 py-4">
-      <div className="flex gap-1.5">
+    <div className="flex flex-col gap-2 px-4 pb-3">
+      {/* Segmented bar */}
+      <div className="flex gap-1">
         {Array.from({ length: total }).map((_, i) => {
-          const state = i < current ? 'done' : i === current ? 'active' : 'pending';
+          const done   = i < current;
+          const active = i === current;
           return (
-            <div
-              key={i}
-              className="flex-1 h-1.5 rounded-full overflow-hidden bg-parchment-dark"
-            >
+            <div key={i} className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: '#E2D9D4' }}>
               <div
-                className={`h-full rounded-full transition-all duration-[400ms] ${
-                  state === 'done'
-                    ? 'w-full bg-crimson/50'
-                    : state === 'active'
-                    ? 'w-full bg-crimson'
-                    : 'w-0 bg-crimson'
-                }`}
-                style={{ transitionTimingFunction: 'cubic-bezier(0.23, 1, 0.32, 1)' }}
+                className="h-full rounded-full"
+                style={{
+                  width: done || active ? '100%' : '0%',
+                  background: done ? 'rgba(190,30,45,0.45)' : active ? '#BE1E2D' : 'transparent',
+                  transition: 'width 380ms cubic-bezier(0.23, 1, 0.32, 1)',
+                }}
               />
             </div>
           );
         })}
       </div>
-      <p className="font-body text-xs text-espresso/50">
-        <span className="font-semibold text-espresso/70">
-          Section {current + 1} of {total}
+
+      {/* Label */}
+      <p className="font-body text-[11px]" style={{ color: 'rgba(26,8,0,0.45)' }}>
+        <span className="font-semibold" style={{ color: 'rgba(26,8,0,0.65)' }}>
+          {current + 1} / {total}
         </span>
-        {' '}—{' '}{subtitle}
+        {'  ·  '}
+        {subtitle}
       </p>
     </div>
   );
