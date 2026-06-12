@@ -7,7 +7,7 @@ import PhoneInput from '@/components/ui/PhoneInput';
 import AnimatedReveal from '@/components/ui/AnimatedReveal';
 
 export default function RegistrationForm() {
-  const { name, phone, setName, setPhone, sendOtp } = useOtpStore();
+  const { name, phone, setName, setPhone, sendOtp, isLoading, apiError } = useOtpStore();
   const [errors, setErrors] = useState<{ name?: string; phone?: string }>({});
 
   const validate = () => {
@@ -18,8 +18,8 @@ export default function RegistrationForm() {
     return Object.keys(e).length === 0;
   };
 
-  const handleSubmit = () => {
-    if (validate()) sendOtp();
+  const handleSubmit = async () => {
+    if (validate()) await sendOtp();
   };
 
   return (
@@ -50,10 +50,17 @@ export default function RegistrationForm() {
         </div>
       </AnimatedReveal>
 
+      {apiError && (
+        <AnimatedReveal>
+          <p className="font-body text-sm text-spice text-center">{apiError}</p>
+        </AnimatedReveal>
+      )}
+
       <AnimatedReveal delay={0.44}>
         <Button
           label="Send Me a Code"
           onClick={handleSubmit}
+          isLoading={isLoading}
           accessibilityLabel="Send me an OTP code"
         />
       </AnimatedReveal>

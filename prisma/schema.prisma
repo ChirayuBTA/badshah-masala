@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                 String    @id @default(uuid())
+  name               String
+  phone              String    @unique
+  verified           Boolean   @default(false)
+  verifiedAt         DateTime?
+  otpCode            String?
+  otpExpiresAt       DateTime?
+  hasCompletedSurvey Boolean   @default(false)
+  surveyCompletedAt  DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  survey SurveyResponse?
+}
+
+// ─── Survey structure (seeded from src/data/survey.ts) ───────────────────────
+
+model SurveySection {
+  id       String @id
+  title    String
+  subtitle String
+  order    Int
+
+  questions SurveyQuestion[]
+}
+
+enum QuestionType {
+  SINGLE
+  MULTI
+  TEXT
+  CONDITIONAL
+  COMPOUND
+}
+
+model SurveyQuestion {
+  id        String       @id @default(uuid())
+  key       String
+  sectionId String
+  type      QuestionType
+  label     String
+  required  Boolean      @default(false)
+  order     Int
+  parentId  String?
+
+  section SurveySection    @relation(fields: [sectionId], references: [id])
+  parent  SurveyQuestion?  @relation("CompoundParts", fields: [parentId], references: [id])
+  parts   SurveyQuestion[] @relation("CompoundParts")
+  options QuestionOption[]
+  answers SurveyAnswer[]
+
+  @@unique([sectionId, key])
+}
+
+model QuestionOption {
+  id                     String  @id @default(uuid())
+  questionId             String
+  key                    String
+  label                  String
+  order                  Int
+  isConditionalTrigger   Boolean @default(false)
+  conditionalLabel       String?
+  conditionalPlaceholder String?
+
+  question        SurveyQuestion   @relation(fields: [questionId], references: [id])
+  selectedOptions SelectedOption[]
+
+  @@unique([questionId, key])
+}
+
+// ─── Survey responses ─────────────────────────────────────────────────────────
+
+model SurveyResponse {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  submittedAt DateTime @default(now())
+
+  user    User           @relation(fields: [userId], references: [id])
+  answers SurveyAnswer[]
+}
+
+model SurveyAnswer {
+  id               String  @id @default(uuid())
+  surveyResponseId String
+  questionId       String
+  textValue        String?
+
+  surveyResponse  SurveyResponse   @relation(fields: [surveyResponseId], references: [id])
+  question        SurveyQuestion   @relation(fields: [questionId], references: [id])
+  selectedOptions SelectedOption[]
+
+  @@unique([surveyResponseId, questionId])
+}
+
+model SelectedOption {
+  id             String @id @default(uuid())
+  surveyAnswerId String
+  optionId       String
+
+  surveyAnswer SurveyAnswer   @relation(fields: [surveyAnswerId], references: [id])
+  option       QuestionOption @relation(fields: [optionId], references: [id])
+
+  @@unique([surveyAnswerId, optionId])
+}

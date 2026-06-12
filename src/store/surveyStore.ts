@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { survey } from '@/data/survey';
+import { useOtpStore } from '@/store/otpStore';
 
 type AnswerValue = string | string[];
 
@@ -11,6 +12,7 @@ interface SurveyState {
   nextSection: () => void;
   prevSection: () => void;
   submit: () => Promise<void>;
+  reset: () => void;
 }
 
 export const useSurveyStore = create<SurveyState>((set, get) => ({
@@ -32,8 +34,20 @@ export const useSurveyStore = create<SurveyState>((set, get) => ({
     })),
 
   submit: async () => {
+    const { answers } = get();
+    const phone = useOtpStore.getState().phone;
     set({ isSubmitting: true });
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    set({ isSubmitting: false });
+    try {
+      const res = await fetch('/api/survey/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, answers }),
+      });
+      if (!res.ok) throw new Error('Failed to submit survey');
+    } finally {
+      set({ isSubmitting: false });
+    }
   },
+
+  reset: () => set({ currentSectionIndex: 0, answers: {}, isSubmitting: false }),
 }));

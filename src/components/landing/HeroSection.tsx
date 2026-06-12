@@ -1,8 +1,6 @@
-'use client';
+"use client";
 
-import AnimatedReveal from '@/components/ui/AnimatedReveal';
-import CountdownTimer from '@/components/ui/CountdownTimer';
-import { DRAW_END_DATE } from '@/lib/config';
+import AnimatedReveal from "@/components/ui/AnimatedReveal";
 
 export default function HeroSection() {
   return (
@@ -22,11 +20,43 @@ export default function HeroSection() {
         <div className="w-28 h-28 rounded-full bg-crimson/10 border-4 border-crimson/20 flex items-center justify-center">
           <svg viewBox="0 0 80 80" width="64" height="64" fill="none">
             {/* Spice jar illustration */}
-            <rect x="22" y="28" width="36" height="38" rx="6" fill="#BE1E2D" opacity="0.15" />
-            <rect x="26" y="32" width="28" height="30" rx="4" fill="#BE1E2D" opacity="0.3" />
-            <rect x="28" y="20" width="24" height="12" rx="4" fill="#F5A623" opacity="0.8" />
+            <rect
+              x="22"
+              y="28"
+              width="36"
+              height="38"
+              rx="6"
+              fill="#BE1E2D"
+              opacity="0.15"
+            />
+            <rect
+              x="26"
+              y="32"
+              width="28"
+              height="30"
+              rx="4"
+              fill="#BE1E2D"
+              opacity="0.3"
+            />
+            <rect
+              x="28"
+              y="20"
+              width="24"
+              height="12"
+              rx="4"
+              fill="#F5A623"
+              opacity="0.8"
+            />
             <rect x="32" y="24" width="16" height="4" rx="2" fill="#BE1E2D" />
-            <text x="40" y="52" textAnchor="middle" fontSize="11" fontFamily="Georgia, serif" fontWeight="bold" fill="#BE1E2D">
+            <text
+              x="40"
+              y="52"
+              textAnchor="middle"
+              fontSize="11"
+              fontFamily="Georgia, serif"
+              fontWeight="bold"
+              fill="#BE1E2D"
+            >
               BM
             </text>
             {/* Stars */}
@@ -45,16 +75,14 @@ export default function HeroSection() {
 
       <AnimatedReveal delay={0.2}>
         <p className="font-body text-sm text-espresso/60 leading-relaxed max-w-xs">
-          Answer a few quick questions about your kitchen and get a chance to win a{' '}
-          <span className="text-crimson font-semibold">Badshah Premium Masala Gift Hamper.</span>
+          Answer a few quick questions about your kitchen and get a chance to
+          win a{" "}
+          <span className="text-crimson font-semibold">
+            Badshah Premium Masala Gift Hamper.
+          </span>
         </p>
       </AnimatedReveal>
 
-      <AnimatedReveal delay={0.26}>
-        <div className="bg-white rounded-2xl border border-parchment-dark px-4 py-2.5 shadow-sm">
-          <CountdownTimer targetDate={DRAW_END_DATE} />
-        </div>
-      </AnimatedReveal>
     </div>
   );
 }

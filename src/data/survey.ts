@@ -102,10 +102,10 @@ export const survey: SurveyConfig = [
         label: 'Which masala brands do you currently use? (Select all that apply)',
         required: true,
         options: [
-          { id: 'badshah', label: 'Badshah' },
           { id: 'everest', label: 'Everest' },
           { id: 'mdh', label: 'MDH' },
           { id: 'catch', label: 'Catch' },
+          { id: 'badshah', label: 'Badshah' },
           { id: 'ramdev', label: 'Ramdev' },
           { id: 'other', label: 'Other' },
         ],
@@ -116,10 +116,10 @@ export const survey: SurveyConfig = [
         label: 'Which brand do you reach for most often?',
         required: true,
         options: [
-          { id: 'badshah', label: 'Badshah' },
           { id: 'everest', label: 'Everest' },
           { id: 'mdh', label: 'MDH' },
           { id: 'catch', label: 'Catch' },
+          { id: 'badshah', label: 'Badshah' },
           { id: 'ramdev', label: 'Ramdev' },
           { id: 'other', label: 'Other' },
         ],

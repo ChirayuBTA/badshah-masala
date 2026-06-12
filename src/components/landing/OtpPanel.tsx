@@ -1,26 +1,47 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useOtpStore } from '@/store/otpStore';
 import OtpDigitInput from '@/components/ui/OtpDigitInput';
 import Button from '@/components/ui/Button';
 import AnimatedReveal from '@/components/ui/AnimatedReveal';
 
+const RESEND_COOLDOWN_SECONDS = 30;
+
 export default function OtpPanel() {
-  const { phone, verifyOtp, otpError, sendOtp } = useOtpStore();
+  const { phone, verifyOtp, otpError, isLoading, isResending, lastSentAt, resendOtp } = useOtpStore();
   const [digits, setDigits] = useState<string[]>(['', '', '', '']);
-  const [verifying, setVerifying] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+
+  // Sync cooldown timer whenever lastSentAt changes
+  useEffect(() => {
+    if (!lastSentAt) return;
+    const elapsed = Math.floor((Date.now() - lastSentAt) / 1000);
+    const remaining = Math.max(0, RESEND_COOLDOWN_SECONDS - elapsed);
+    setCooldown(remaining);
+    if (remaining === 0) return;
+
+    const interval = setInterval(() => {
+      const secs = Math.max(0, RESEND_COOLDOWN_SECONDS - Math.floor((Date.now() - lastSentAt) / 1000));
+      setCooldown(secs);
+      if (secs === 0) clearInterval(interval);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [lastSentAt]);
 
   const handleVerify = async () => {
-    setVerifying(true);
-    await new Promise((r) => setTimeout(r, 300));
-    verifyOtp(digits.join(''));
-    setVerifying(false);
+    await verifyOtp(digits.join(''));
   };
 
-  const handleComplete = (code: string) => {
-    verifyOtp(code);
+  const handleComplete = async (code: string) => {
+    await verifyOtp(code);
+  };
+
+  const handleResend = async () => {
+    setDigits(['', '', '', '']);
+    await resendOtp();
   };
 
   const maskedPhone = `+91 ****${phone.slice(-4)}`;
@@ -39,7 +60,6 @@ export default function OtpPanel() {
             We&apos;ve sent a 4-digit code to{' '}
             <span className="font-semibold text-espresso">{maskedPhone}</span>
           </p>
-          <p className="font-body text-xs text-espresso/40 mt-1">(Hint: try 1234)</p>
         </div>
       </AnimatedReveal>
 
@@ -53,17 +73,24 @@ export default function OtpPanel() {
       <Button
         label="Claim My Chance to Win"
         onClick={handleVerify}
-        isLoading={verifying}
+        isLoading={isLoading}
         disabled={digits.some((d) => !d)}
         accessibilityLabel="Verify OTP and proceed to survey"
       />
 
       <button
-        onClick={() => { setDigits(['', '', '', '']); sendOtp(); }}
-        className="font-body text-sm text-crimson/70 text-center underline underline-offset-2 hover:text-crimson transition-colors"
-        aria-label="Resend code"
+        onClick={handleResend}
+        disabled={cooldown > 0 || isResending}
+        className="font-body text-sm text-center transition-colors disabled:cursor-not-allowed
+          enabled:text-crimson/70 enabled:underline enabled:underline-offset-2 enabled:hover:text-crimson
+          disabled:text-espresso/30"
+        aria-label="Resend OTP code"
       >
-        Resend code
+        {isResending
+          ? 'Sending…'
+          : cooldown > 0
+          ? `Resend code in ${cooldown}s`
+          : 'Resend code'}
       </button>
     </motion.div>
   );

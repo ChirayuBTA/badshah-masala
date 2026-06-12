@@ -4,7 +4,6 @@ import { useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSurveyStore } from '@/store/surveyStore';
-import { useResultStore } from '@/store/resultStore';
 import type { SurveyConfig, Section } from '@/data/survey';
 import SectionProgress from './SectionProgress';
 import QuestionCard from './QuestionCard';
@@ -27,7 +26,6 @@ function isSectionComplete(section: Section, answers: Record<string, string | st
 export default function SurveyShell({ sections }: Props) {
   const router = useRouter();
   const { currentSectionIndex, answers, nextSection, prevSection, isSubmitting, submit } = useSurveyStore();
-  const { determineResult } = useResultStore();
   const direction = useRef<'forward' | 'back'>('forward');
 
   const section = sections[currentSectionIndex];
@@ -49,7 +47,6 @@ export default function SurveyShell({ sections }: Props) {
   const handleSubmit = async () => {
     if (!canAdvance) return;
     await submit();
-    determineResult();
     router.push('/result');
   };
 
