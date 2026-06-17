@@ -2,31 +2,37 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { AnimatePresence } from 'framer-motion';
+// import { AnimatePresence } from 'framer-motion';
 import { useOtpStore } from '@/store/otpStore';
 import HeroSection from '@/components/landing/HeroSection';
 import RegistrationForm from '@/components/landing/RegistrationForm';
-import OtpPanel from '@/components/landing/OtpPanel';
+// import OtpPanel from '@/components/landing/OtpPanel';
 
 export default function HomePage() {
   const { step } = useOtpStore();
   const router = useRouter();
 
+  // OTP FLOW DISABLED: redirect straight to survey after registration (step becomes 'otp')
   useEffect(() => {
-    if (step === 'verified') router.push('/survey');
+    if (step === 'otp' /* || step === 'verified' */) router.push('/survey');
   }, [step, router]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-parchment max-w-lg mx-auto w-full">
-      <HeroSection />
+    <div className="bg-parchment flex flex-col h-dvh md:min-h-screen md:h-auto md:items-center md:justify-center">
+      <div className="flex flex-col flex-1 w-full md:flex-none md:max-w-lg md:mx-auto md:rounded-2xl md:shadow-xl md:overflow-hidden">
+        <HeroSection />
 
-      <AnimatePresence mode="wait">
-        {step !== 'otp' ? (
-          <RegistrationForm key="form" />
-        ) : (
-          <OtpPanel key="otp" />
-        )}
-      </AnimatePresence>
+        {/* OTP FLOW DISABLED: always show registration form; OtpPanel commented out
+        <AnimatePresence mode="wait">
+          {step !== 'otp' ? (
+            <RegistrationForm key="form" />
+          ) : (
+            <OtpPanel key="otp" />
+          )}
+        </AnimatePresence>
+        */}
+        <RegistrationForm />
+      </div>
     </div>
   );
 }

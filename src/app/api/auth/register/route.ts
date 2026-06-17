@@ -23,8 +23,8 @@ export async function POST(request: Request) {
 
   await prisma.user.upsert({
     where: { phone },
-    update: { name, otpCode, otpExpiresAt, verified: false },
-    create: { name, phone, otpCode, otpExpiresAt },
+    update: { name, otpCode, otpExpiresAt, verified: true },
+    create: { name, phone, otpCode, otpExpiresAt, verified: true },
   });
 
   if (process.env.NODE_ENV === 'production') {

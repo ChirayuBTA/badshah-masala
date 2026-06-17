@@ -27,21 +27,26 @@ export default function SurveyShell({ sections }: Props) {
   const router = useRouter();
   const { currentSectionIndex, answers, nextSection, prevSection, isSubmitting, submit } = useSurveyStore();
   const direction = useRef<'forward' | 'back'>('forward');
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const section = sections[currentSectionIndex];
   const isFirst = currentSectionIndex === 0;
   const isLast = currentSectionIndex === sections.length - 1;
   const canAdvance = isSectionComplete(section, answers);
 
+  const scrollToTop = () => scrollRef.current?.scrollTo({ top: 0 });
+
   const handleNext = () => {
     if (!canAdvance) return;
     direction.current = 'forward';
     nextSection();
+    scrollToTop();
   };
 
   const handlePrev = () => {
     direction.current = 'back';
     prevSection();
+    scrollToTop();
   };
 
   const handleSubmit = async () => {
@@ -87,7 +92,7 @@ export default function SurveyShell({ sections }: Props) {
       </div>
 
       {/* Questions */}
-      <div className="flex-1 overflow-y-auto">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={section.id}

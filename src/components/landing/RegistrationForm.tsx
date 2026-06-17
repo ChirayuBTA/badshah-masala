@@ -23,7 +23,7 @@ export default function RegistrationForm() {
   };
 
   return (
-    <div className="flex flex-col gap-4 px-6 pb-6">
+    <div className="flex-1 flex flex-col justify-center gap-4 px-6 py-5 md:flex-none md:py-6">
       <AnimatedReveal delay={0.32}>
         <div className="flex flex-col gap-1.5">
           <label className="font-body text-sm font-semibold text-espresso/70">Your Name</label>
@@ -58,16 +58,16 @@ export default function RegistrationForm() {
 
       <AnimatedReveal delay={0.44}>
         <Button
-          label="Send Me a Code"
+          label="Start Survey"
           onClick={handleSubmit}
           isLoading={isLoading}
-          accessibilityLabel="Send me an OTP code"
+          accessibilityLabel="Start the survey"
         />
       </AnimatedReveal>
 
       <AnimatedReveal delay={0.48}>
         <p className="font-body text-xs text-espresso/40 text-center leading-relaxed">
-          By continuing, you agree to our terms. We&apos;ll only contact you about your prize.
+          By continuing, you agree to our terms.
         </p>
       </AnimatedReveal>
     </div>
